@@ -61,7 +61,7 @@ function renderDorks() {
 
       const copyBtn = document.createElement("button");
       copyBtn.className = "copy-btn";
-      copyBtn.textContent = "📋";
+      copyBtn.textContent = "Copy";
 
       copyBtn.onclick = () => {
         navigator.clipboard.writeText(finalDork);
