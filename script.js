@@ -81,5 +81,4 @@ function renderDorks() {
 input.addEventListener("input", renderDorks);
 subToggle.addEventListener("change", renderDorks);
 
-// Initial render
 renderDorks();
