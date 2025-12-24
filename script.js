@@ -22,9 +22,19 @@ const DORKS = {
 
 const input = document.getElementById("domainInput");
 const container = document.getElementById("dorksContainer");
+const subToggle = document.getElementById("subToggle");
 
-function renderDorks(domain) {
+function getDomain() {
+  let domain = input.value.trim() || "example.com";
+  if (subToggle.checked && !domain.startsWith("*.")) {
+    domain = "*." + domain;
+  }
+  return domain;
+}
+
+function renderDorks() {
   container.innerHTML = "";
+  const domain = getDomain();
 
   Object.entries(DORKS).forEach(([category, dorks]) => {
     const section = document.createElement("div");
@@ -35,10 +45,15 @@ function renderDorks(domain) {
     section.appendChild(title);
 
     dorks.forEach(dork => {
-      const finalDork = dork.replace("{domain}", domain.trim() || "example.com");
+      const finalDork = dork.replace("{domain}", domain);
       const googleURL =
         "https://www.google.com/search?q=" +
         encodeURIComponent(finalDork);
+
+      const row = document.createElement("div");
+      row.style.display = "flex";
+      row.style.alignItems = "center";
+      row.style.gap = "8px";
 
       const link = document.createElement("a");
       link.href = googleURL;
@@ -46,16 +61,24 @@ function renderDorks(domain) {
       link.className = "dork";
       link.textContent = finalDork;
 
-      section.appendChild(link);
+      const copyBtn = document.createElement("button");
+      copyBtn.textContent = "📋";
+      copyBtn.title = "Copy dork";
+      copyBtn.onclick = () => {
+        navigator.clipboard.writeText(finalDork);
+      };
+
+      row.appendChild(link);
+      row.appendChild(copyBtn);
+      section.appendChild(row);
     });
 
     container.appendChild(section);
   });
 }
 
-input.addEventListener("input", () => {
-  renderDorks(input.value);
-});
+input.addEventListener("input", renderDorks);
+subToggle.addEventListener("change", renderDorks);
 
 // Initial render
-renderDorks(input.value);
+renderDorks();
